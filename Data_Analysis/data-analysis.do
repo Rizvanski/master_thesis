@@ -50,10 +50,10 @@ gen fin_lib_fin_dev_prcrdt = fin_lib_lag*fin_dev_prcrdt_lag
 * financial liberalization and financial development measured by bank deposits/GDP
 gen fin_lib_fin_dev_dep = fin_lib_lag*fin_dev_dep_lag
 
-* financial Liberalization and global Financial Crisis
-gen fin_lib_gfc = fin_lib_lag*gfc
+* financial Liberalization and dependande on financial crises
+gen fin_lib_fc = fin_lib_lag*gfc_lag
 
-*** creating financial liberalization pre and post global financial crisis variables ***
+*** creating financial liberalization pre, post, and during global financial crisis variables ***
 * pre-financial-crisis indicator variable
 gen pre_crisis = 0
 replace pre_crisis = 1 if year <= 2006
@@ -64,6 +64,8 @@ gen post_crisis = 0
 replace post_crisis = 1 if year >= 2009
 * financial liberalization after the global financial crisis independent variable
 gen fin_lib_post_gfc = fin_lib_lag*post_crisis
+* financial liberalization during global financial crisis independent variable
+gen fin_lib_gfc = fin_lib_lag*gfc
 
 *** adding labels ***
 * Dependent Variables
@@ -75,6 +77,7 @@ label var swiid_dsp_bott50 "SWIID Disposable Income Inequality (bottom 50%)"
 label var swiid_dsp_top10 "SWIID Disposable Income Inequality (top 10%)"
 label var gini_coeff "WIID UNU-WIDER Gini Coefficients" 
 label var s80s20 "Income Ration 80/20 Percentiles"
+label var palma "Palma Ratio"
 * Main Independent Variables
 label var fin_lib "Fraser Institute Financial Liberalization Indicator"
 label var fin_lib_lag "Lag Fraser Institute Financial Liberalization Indicator"
@@ -86,6 +89,7 @@ label var fin_dev_dep "Financial Development Indicator (Bank Deposits/GDP)"
 label var fin_dev_dep_lag "Lag Financial Development Indicator (Bank Deposits/GDP)"
 label var fin_lib_fin_dev_prcrdt "Interaction between Financial Liberalization and Financial Development 1"
 label var fin_lib_fin_dev_dep "Interaction between Financial Liberalization and Financial Development 2"
+label var fin_lib_fc "Interaction between Financial Liberalization and Financial Crisis"
 label var fin_lib_gfc "Interaction between Financial Liberalization and Global Financial Crisis"
 label var pre_crisis "Period Prior Global Financial Crisis (2007/2008) Binary Variable"
 label var fin_lib_pre_gfc "Fraser Institutue Financial Liberalization Indicator Prior Global Financial Crisis"
@@ -137,6 +141,8 @@ label var stock_mrkt  "Stock Market Capitalization to GDP (%)"
 label var stock_trade "Stock Market Total Value Traded to GDP (%)"
 label var private_penfunds "Private Pension Funds Assets"
 label var mutual_funds "Mutual Fund Assets to GDP"
+label var fdi_dollar "Foreign Direct Investments ($)"
+label var equity_dollar "Capital Inflow Equity Investments"
 
 ***** Data Visualization *****
 
@@ -306,7 +312,7 @@ twoway scatter gini_coeff fin_dev_prcrdt, xtitle("Financial Development Index") 
 asdoc des, replace
 
 *** variable overall summary statistics ***
-asdoc sum swiid_market gini_coeff fin_dev fin_lib gfc gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_exp life_exp net_barter fdi cap_for gvt_cs curcri kaopen civ_lib exprty
+asdoc sum gini_coeff s80s20 palma fin_lib fin_dev_prcrdt fin_dev_dep gfc gdp_grth agri ind gdp_per_log trade net_barter nat_res gvt_cs civ_lib exprty infl pop_log edu_ter fdi curcri, title(Table 10: Summary Statistics) save(Y:/Master Thesis Documents Stata/Tables/Summary Statistics.doc) replace
 
 *** variable country specific summary statistics ***
 bys country: asdoc sum swiid_market gini_coeff fin_dev fin_lib gfc gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_exp life_exp net_barter fdi cap_for gvt_cs curcri kaopen civ_lib exprty
@@ -491,6 +497,11 @@ asdoc summarize private_penfunds mutual_funds, ///
   by(country) stat(mean) title(Table 7: Private Investment Funds in South Eastern Europe (2000-2016)) ///
 ftitle(2.0f) ftable(2.0f) save(Y:/Master Thesis Documents Stata/Tables/Private Investment Funds in South Eastern Europe.doc) label abb(.) replace
 
+*** Table: International Capital Flows in South Eastern Europe (2000-2016) ***
+asdoc summarize fdi_dollar equity_dollar, ///
+  by(country) stat(mean) title(Table: International Capital Flows in South Eastern Europe (2000-2016)) ///
+ftitle(2.0f) ftable(2.0f) save(Y:/Master Thesis Documents Stata/Tables/International Capital Flows in South Eastern Europe.doc) label abb(.) replace
+
 *** Table 8: Banking Sectors in Different Regions in the World 
 * clearing all elements
 clear all
@@ -547,25 +558,27 @@ global xlist1 fin_dev_prcrdt_lag
 global xlist2 gfc_lag
 global xlist3 fin_lib_lag fin_dev_prcrdt_lag gfc_lag
 global xlist4 fin_lib_lag fin_dev_prcrdt_lag gfc_lag fin_lib_fin_dev_prcrdt 
-global xlist5 fin_lib_lag fin_dev_prcrdt_lag gfc_lag fin_lib_gfc
-global xlist6 fin_lib_lag fin_dev_prcrdt_lag gfc_lag fin_lib_fin_dev_prcrdt fin_lib_gfc
+global xlist5 fin_lib_lag fin_dev_prcrdt_lag gfc_lag fin_lib_fc
+global xlist55 fin_lib_lag fin_dev_prcrdt_lag gfc_lag fin_lib_gfc
+global xlist6 fin_lib_lag fin_dev_prcrdt_lag gfc_lag fin_lib_fin_dev_prcrdt fin_lib_fc
+global xlist66 fin_lib_lag fin_dev_prcrdt_lag gfc_lag fin_lib_fin_dev_prcrdt fin_lib_gfc
 global xlist7 fin_lib_lag fin_dev_prcrdt_lag gfc_lag pre_crisis fin_lib_pre_gfc
 global xlist8 fin_lib_lag fin_dev_prcrdt_lag gfc_lag pre_crisis fin_lib_gfc fin_lib_pre_gfc
 global xlist9 fin_lib_lag fin_dev_prcrdt_lag gfc_lag post_crisis fin_lib_post_gfc
 global xlist10 fin_lib_lag fin_dev_prcrdt_lag gfc_lag post_crisis fin_lib_gfc fin_lib_post_gfc
 global xlist11 fin_lib_lag fin_dev_prcrdt_lag gfc_lag pre_crisis post_crisis fin_lib_pre_gfc fin_lib_post_gfc
 global xlist12 fin_lib_lag fin_dev_prcrdt_lag gfc_lag pre_crisis post_crisis fin_lib_fin_dev_prcrdt fin_lib_pre_gfc fin_lib_post_gfc
-global clist gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_bartert
+global clist gdp_grth agri ind gdp_per_log trade net_barter nat_res gvt_cs civ_lib exprty infl pop_log edu_ter fdi curcri
 
 *** Hausman Test 1*** (p-value = 0 - null hypothesis rejected - fixed effects model used)
 * fixed effects
-xtreg $ylist $xlist5 $clist, fe
+xtreg $ylist $xlist3 $clist, fe
 estimates store fixed
 * random effects
-xtreg $ylist $xlist5 $clist, re theta
+xtreg $ylist $xlist3 $clist, re theta
 estimates store random
 * running the test
-hausman fixed random
+hausman fixed random //, sigmaless (sigmamore) (for $xlist, $xlist2, $xlist6 or GINI(1), GINI(3),  GINI(7) in Regression Table 1)
 
 *** Regressions Without Interaction Terms ***
 *** 1) Relationship Between Financial Liberalization, Financial Development, Great Financial Crisis and Income Inequality ***
@@ -587,13 +600,13 @@ asdoc xtreg $ylist $xlist6 $clist, fe vce(cluster country) nest append nest titl
 
 *** Hausman Test 2 *** (p-value is 0 - null rejected - fixed effects used)
 * fixed effects
-xtreg $ylist $xlist6 $clist, fe
+xtreg $ylist $xlist12 $clist, fe
 estimates store fixed
 * random effects
-xtreg $ylist $xlist6 $clist, re theta
+xtreg $ylist $xlist12 $clist, re theta
 estimates store random
 * running the test
-hausman fixed random
+hausman fixed random 
 
 *** 5) Testing Whether Financial Liberalization is Correlated to Global Financial Crisis ***
 *** Regressions Without Interaction Terms ***
@@ -601,7 +614,7 @@ hausman fixed random
 asdoc xtreg $ylist $xlist3 $clist, fe vce(cluster country) replace nest title(Regression Table 2) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 2.doc) add(Controls, YES)
 *** Regressions With Interaction Terms ***
 * Testing Whether Financial Liberalization is Correlated With Global Financial Crisis
-asdoc xtreg $ylist $xlist5 $clist, fe vce(cluster country) append nest title(Regression Table 2) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 2.doc) add(Controls, YES)
+asdoc xtreg $ylist $xlist55 $clist, fe vce(cluster country) append nest title(Regression Table 2) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 2.doc) add(Controls, YES)
 *** 6) Testing Whether Financial Liberalization has an Effect on Income Inequality Prior Global Financial Crisis ***
 * Only Prior Global Financial Crisis
 asdoc xtreg $ylist $xlist7 $clist, fe vce(cluster country) append nest title(Regression Table 2) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 2.doc) add(Controls, YES)
@@ -640,9 +653,10 @@ asdoc xtreg $ylist $xlist11 $clist, fe vce(robust) append nest title(Regression 
 asdoc xtreg $ylist $xlist12 $clist, fe vce(robust) append nest title(Regression Table 3) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 3.doc) add(Controls, YES)
 
 *** Tests Using First-Diff Method ***
-*** Testing Whether Financial Liberalization is Dependent on Financial Development and Whether Financial Liberalization is Correlated with the Global Financial Crisis ***
-reg D.($ylist $xlist6 $clist), vce(cluster country) noconstant 
-*** Testing Whether Financial Liberalization's Impact Behaves Differenty Prior Global Financial Crisis ***
+*** Testing Whether Financial Liberalization is Dependent on Financial Development and Whether Financial Liberalization is Correlated with the Financial Crisis ***
+reg D.($ylist $xlist6 $clist), vce(cluster country) noconstant
+*** Exploring Time Dimensions of Financial Liberalization ***
+reg D.($ylist $xlist66 $clist), vce(cluster country) noconstant
 * Only Prior Global Financial Crisis
 reg D.($ylist $xlist7 $clist), vce(cluster country) noconstant 
 * Together With Interaction Term Between Financial Liberalization and Global Financial Crisis
@@ -659,23 +673,24 @@ reg D.($ylist $xlist12 $clist), vce(cluster country) noconstant
 
 *** Tests Using Slovenia in the Sample ***
 *** Including all Former Republics of Yugoslavia ***
-
-*** Testing Whether Financial Liberalization is Dependent on Financial Development and Whether Financial Liberalization is Correlated with the Global Financial Crisis ***
-asdoc xtreg $ylist $xlist6 $clist, fe vce(cluster country) replace nest title(Regression Table 5) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 5.doc) add(Controls, YES)
+*** Testing Whether Financial Liberalization is Dependent on Financial Development and Whether Financial Liberalization is Correlated with Financial Crisis ***
+asdoc xtreg $ylist $xlist6 $clist, fe vce(cluster country) replace nest title(Regression Table 4: Including all Constituent Republics of Yugoslavia) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter curcri) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 4 Including all Constituent Republics of Yugoslavia.doc) add(Controls, YES)
+*** Exploring Time Dimensions of Financial Liberalization ***
+asdoc xtreg $ylist $xlist66 $clist, fe vce(cluster country) append nest title(Regression Table 4: Including all Constituent Republics of Yugoslavia) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter curcri) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 4 Including all Constituent Republics of Yugoslavia.doc) add(Controls, YES)
 *** Testing Whether Financial Liberalization Behaves Differenty Prior Global Financial Crisis ***
 * Only Prior Global Financial Crisis
-asdoc xtreg $ylist $xlist7 $clist, fe vce(cluster country) append nest title(Regression Table 5) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 5.doc) add(Controls, YES)
+asdoc xtreg $ylist $xlist7 $clist, fe vce(cluster country) append nest title(Regression Table 4: Including all Constituent Republics of Yugoslavia) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter curcri) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 4 Including all Constituent Republics of Yugoslavia.doc) add(Controls, YES)
 * Together With Interaction Term Between Financial Liberalization and Global Financial Crisis
-asdoc xtreg $ylist $xlist8 $clist, fe vce(cluster country) append nest title(Regression Table 5) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 5.doc) add(Controls, YES)
+asdoc xtreg $ylist $xlist8 $clist, fe vce(cluster country) append nest title(Regression Table 4: Including all Constituent Republics of Yugoslavia) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter curcri) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 4 Including all Constituent Republics of Yugoslavia.doc) add(Controls, YES)
 *** Testing Whether Financial Liberalization's Impact Behaves Differenty Post Global Financial Crisis ***
 * Only Post Global Financial Crisis
-asdoc xtreg $ylist $xlist9 $clist, fe vce(cluster country) append nest title(Regression Table 5) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 5.doc) add(Controls, YES)
+asdoc xtreg $ylist $xlist9 $clist, fe vce(cluster country) append nest title(Regression Table 4: Including all Constituent Republics of Yugoslavia) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter curcri) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 4 Including all Constituent Republics of Yugoslavia.doc) add(Controls, YES)
 * Together With Interaction Term Between Financial Liberalization and Global Financial Crisis
-asdoc xtreg $ylist $xlist10 $clist, fe vce(cluster country) append nest title(Regression Table 5) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 5.doc) add(Controls, YES)
+asdoc xtreg $ylist $xlist10 $clist, fe vce(cluster country) append nest title(Regression Table 4: Including all Constituent Republics of Yugoslavia) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter curcri) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 4 Including all Constituent Republics of Yugoslavia.doc) add(Controls, YES)
 * Together Prior and Post
-asdoc xtreg $ylist $xlist11 $clist, fe vce(cluster country) append nest title(Regression Table 5) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 5.doc) add(Controls, YES)
+asdoc xtreg $ylist $xlist11 $clist, fe vce(cluster country) append nest title(Regression Table 4: Including all Constituent Republics of Yugoslavia) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter curcri) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 4 Including all Constituent Republics of Yugoslavia.doc) add(Controls, YES)
 *** Testing Both Hypothesis Together ***
-asdoc xtreg $ylist $xlist12 $clist, fe vce(cluster country) append nest title(Regression Table 5) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 5.doc) add(Controls, YES)
+asdoc xtreg $ylist $xlist12 $clist, fe vce(cluster country) append nest title(Regression Table 4: Including all Constituent Republics of Yugoslavia) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter curcri) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 4 Including all Constituent Republics of Yugoslavia.doc) add(Controls, YES)
 
 *** Tests Using Different Measurement for Financial Development ***
 *** Testing Whether Financial Liberalization is Dependent on Financial Development and Whether Financial Liberalization is Correlated with the Global Financial Crisis ***
@@ -684,17 +699,23 @@ global xlist13 fin_dev_dep_lag
 global xlist14 fin_lib_lag fin_dev_dep_lag gfc_lag
 global xlist15 fin_lib_lag fin_dev_dep_lag gfc_lag fin_lib_fin_dev_dep
 global xlist16 fin_lib_lag fin_dev_dep_lag gfc_lag fin_lib_fin_dev_dep fin_lib_gfc
-global xlist17 fin_lib_lag fin_dev_dep_lag gfc_lag pre_crisis post_crisis fin_lib_fin_dev_dep fin_lib_pre_gfc fin_lib_post_gfc
+global xlist17 fin_lib_lag fin_dev_dep_lag gfc_lag pre_crisis fin_lib_gfc fin_lib_pre_gfc
+global xlist18 fin_lib_lag fin_dev_dep_lag gfc_lag post_crisis fin_lib_gfc fin_lib_post_gfc
+global xlist19 fin_lib_lag fin_dev_dep_lag gfc_lag pre_crisis post_crisis fin_lib_fin_dev_dep fin_lib_pre_gfc fin_lib_post_gfc
 * relationship between financial development and income inequality
-asdoc xtreg $ylist $xlist13 $clist, fe vce(cluster country) replace nest title(Regression Table 6) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 6.doc) add(Controls, YES)
+asdoc xtreg $ylist $xlist13 $clist, fe vce(cluster country) replace nest title(Regression Table 5: Alternative FD Measurement) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 5 Alternative FD Measurement.doc) add(Controls, YES)
 * all variables together without interaction terms
-asdoc xtreg $ylist $xlist14 $clist, fe vce(cluster country) append nest title(Regression Table 6) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 6.doc) add(Controls, YES)
+asdoc xtreg $ylist $xlist14 $clist, fe vce(cluster country) append nest title(Regression Table 5: Alternative FD Measurement) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 5 Alternative FD Measurement.doc) add(Controls, YES)
 * interaction term between financial liberalization and financial development
-asdoc xtreg $ylist $xlist15 $clist, fe vce(cluster country) append nest title(Regression Table 6) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 6.doc) add(Controls, YES)
-* both interaction terms included
-asdoc xtreg $ylist $xlist16 $clist, fe vce(cluster country) append nest title(Regression Table 6) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 6.doc) add(Controls, YES)
+asdoc xtreg $ylist $xlist15 $clist, fe vce(cluster country) append nest title(Regression Table 5: Alternative FD Measurement) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 5 Alternative FD Measurement.doc) add(Controls, YES)
+* both interaction terms included (time dimensions of FL)
+asdoc xtreg $ylist $xlist16 $clist, fe vce(cluster country) append nest title(Regression Table 5: Alternative FD Measurement) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 5 Alternative FD Measurement.doc) add(Controls, YES)
+* pre gfc
+asdoc xtreg $ylist $xlist17 $clist, fe vce(cluster country) append nest title(Regression Table 5: Alternative FD Measurement) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 5 Alternative FD Measurement.doc) add(Controls, YES)
+* post gfc
+asdoc xtreg $ylist $xlist18 $clist, fe vce(cluster country) append nest title(Regression Table 5: Alternative FD Measurement) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 5 Alternative FD Measurement.doc) add(Controls, YES)
 *** Testing Both Hypothesis Together ***
-asdoc xtreg $ylist $xlist17 $clist, fe vce(cluster country) append nest title(Regression Table 6) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 6.doc) add(Controls, YES)
+asdoc xtreg $ylist $xlist19 $clist, fe vce(cluster country) append nest title(Regression Table 5: Alternative FD Measurement) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(GINI) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 5 Alternative FD Measurement.doc) add(Controls, YES)
 
 *** Tests Using SWIID Market Income and Disposable Income Inequality Measures ***
 * defining global variables
@@ -761,20 +782,26 @@ asdoc xtreg $ylist3 $xlist8 $clist, fe vce(cluster country) append nest title(Re
 * Post
 asdoc xtreg $ylist3 $xlist10 $clist, fe vce(cluster country) append nest title(Regression Table 9) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(SWIID DSP) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 9.doc) add(Controls, YES)
 
-*** Tests Using the 80/20 percentile ratio from WIID ***
+*** Tests Using the 80/20 percentile ratio and Palma from WIID ***
 * defining global variables
-global ylist7 s80s20
+global ylist1 s80s20
+global ylist2 palma
 * 1
-asdoc xtreg $ylist7 $xlist3 $clist, fe vce(cluster country) replace nest title(Regression Table 10) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(S80S20) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 10.doc) add(Controls, YES)
+asdoc xtreg $ylist1 $xlist3 $clist, fe vce(cluster country) replace nest title(Regression Table 10) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(S80S20) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 10.doc) add(Controls, YES)
 * 2
-asdoc xtreg $ylist7 $xlist6 $clist, fe vce(cluster country) append nest title(Regression Table 10) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(S80S20) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 10.doc) add(Controls, YES)
+asdoc xtreg $ylist1 $xlist6 $clist, fe vce(cluster country) append nest title(Regression Table 10) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(S80S20) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 10.doc) add(Controls, YES)
 * 3
-asdoc xtreg $ylist7 $xlist8 $clist, fe vce(cluster country) append nest title(Regression Table 10) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(S80S20) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 10.doc) add(Controls, YES)
+asdoc xtreg $ylist1 $xlist8 $clist, fe vce(cluster country) append nest title(Regression Table 10) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(S80S20) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 10.doc) add(Controls, YES)
 * 4
-asdoc xtreg $ylist7 $xlist10 $clist, fe vce(cluster country) append nest title(Regression Table 10) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(S80S20) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 10.doc) add(Controls, YES)
-
-
-
+asdoc xtreg $ylist1 $xlist10 $clist, fe vce(cluster country) append nest title(Regression Table 10) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(S80S20) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 10.doc) add(Controls, YES)
+* 5
+asdoc xtreg $ylist2 $xlist3 $clist, fe vce(cluster country) append nest title(Regression Table 10) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(PALMA) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 10.doc) add(Controls, YES)
+* 6
+asdoc xtreg $ylist2 $xlist6 $clist, fe vce(cluster country) append nest title(Regression Table 10) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(PALMA) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 10.doc) add(Controls, YES)
+* 8
+asdoc xtreg $ylist2 $xlist8 $clist, fe vce(cluster country) append nest title(Regression Table 10) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(PALMA) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 10.doc) add(Controls, YES)
+* 10
+asdoc xtreg $ylist2 $xlist10 $clist, fe vce(cluster country) append nest title(Regression Table 10) drop(gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter _cons) cnames(PALMA) save(Y:/Master Thesis Documents Stata/Tables/Regression Table 10.doc) add(Controls, YES)
 
 
 
@@ -1000,3 +1027,7 @@ xtreg $ylist $xlist3 $clist, fe
 xtreg $ylist $xlist10, fe
 * with controls
 xtreg $ylist $xlist10 $clist, fe
+
+
+
+global clist gdp_per_log trade pop_log infl gdp_grth agri ind nat_res edu_ter fdi gvt_cs civ_lib exprty net_barter curcri
