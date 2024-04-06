@@ -39,7 +39,7 @@ All of the data files used to construct the data set can be found in the folder 
 same folder, under the sub-folder "final_data". In this sub-folder there are two files, named: final_data_see, and final_data_world. The first file (.._see) contains data for the countries
 of South Eastern Europe. This file was used in the main empirical analysis, as well as for constructing the tables and figures for the South Eastern European countries. The second file (.._world)
 contains data for countries belonging to different regions of the world. This file (.._world) was only used for constructing tables that were used to compare more developed economies with the 
-countries used in the main analysis. Both of the files can be found in csv and dta formats. 
+countries used in the main analysis. Both of the files can be found in .csv and .dta formats. 
 
 These files are easily accessible by either clicking the .csv files, or by opening the .dta file with Stata.
 
