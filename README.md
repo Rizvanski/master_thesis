@@ -69,6 +69,6 @@ All of the papers used in the master thesis are listed in a text file. This file
 
 ### Tables
 
-The folder "Tables" contains all of the tables used in the master thesis. First, there are the the descriptive tables, starting from "Table 1" to "Table 15". These tables contain descriptive information 
+The folder "Tables" contains all of the tables used in the master thesis. First, there are the descriptive tables, starting from "Table 1" to "Table 15". These tables contain descriptive information 
 on both the South Eastern European countries and the countries taken as comparison from different regions of the world. Then, there are the regression tables, starting from "Regression Table 1" to
 "Regression Table 6", which show the results from the empirical analysis. All of the tables are in .docx format.
