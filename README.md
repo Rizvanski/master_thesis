@@ -46,7 +46,7 @@ These files are easily accessible by either clicking the .csv files, or by openi
 ### Data Management
 
 There are several data files used to construct the panel data. This panel data was not previously available online. For the construction of this data, there are two separate notebook
-files used. These files can be found in the "Data_Management" folder. The first notebook file (data_management_see.ipynb) was used to construct the panel data 
+files. These files can be found in the "Data_Management" folder. The first notebook file (data_management_see.ipynb) was used to construct the panel data 
 (final_data_see.dta and final_data_see.csv) on the South Eastern European Countries. The second notebook file (data_management_world.ipynb) was used to construct the data files 
 (final_data_world.dta and final_data_world.csv) on the countries taken as comparison from different regions of the world. 
 
