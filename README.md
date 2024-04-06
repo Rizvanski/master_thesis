@@ -41,7 +41,7 @@ of South Eastern Europe. This file was used in the main empirical analysis, as w
 contains data for countries belonging to different regions of the world. This file (.._world) was only used for constructing tables that were used to compare more developed economies with the 
 countries used in the main analysis. Both of the files can be found in csv and dta formats. 
 
-These files are easily accessible either by clicking the .csv files, or by opening the .dta file with Stata.
+These files are easily accessible by either clicking the .csv files, or by opening the .dta file with Stata.
 
 ### Data Management
 
