@@ -52,8 +52,7 @@ files. These files can be found in the "Data_Management" folder. The first noteb
 
 ### Empirical Analysis
 
-The empirical analysis was done using the Stata program. The do-file can be found in the "Empirical_Analysis" folder, under the name "data-analysis.do". This file can be opened using the Stata program.
-This do-file was used to conduct the empirical analysis with a country fixed-effects dynamic panel data model. Additionally, this file was used to create the descriptive tables and figures used for the master thesis.
+The empirical analysis was done using the Stata program. The do-file can be found in the "Empirical_Analysis" folder, under the name "data-analysis.do". This file can be opened using the Stata program or viewed with directly from this repository. This do-file was used to conduct the empirical analysis with a country fixed-effects dynamic panel data model. Additionally, this file was used to create the descriptive tables and figures used for the master thesis.
 
 ### Figures
 
