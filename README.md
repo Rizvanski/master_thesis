@@ -46,11 +46,30 @@ These files are easily accessible either by clicking the .csv files, or by openi
 ### Data Management
 
 There are several data files used to construct the panel data. This panel data was not previously available online. For the construction of this data, there are two separate notebook
-files used. The first notebook file (data_management_see.ipynb) was used to construct the panel data (final_data_see.dta and final_data_see.csv) on the South Eastern European Countries.
-The second notebook file (data_management_world.ipynb) was used to construct the data files (final_data_world.dta and final_data_world.csv). 
+files used. These files can be found in the "Data_Management" folder. The first notebook file (data_management_see.ipynb) was used to construct the panel data 
+(final_data_see.dta and final_data_see.csv) on the South Eastern European Countries. The second notebook file (data_management_world.ipynb) was used to construct the data files 
+(final_data_world.dta and final_data_world.csv) on the countries as comparison from different regions of the world. 
 
 ### Empirical Analysis
 
-For constructing 
+The empirical analysis was done using the Stata program. The do-file can be found in the "Empirical_Analysis" folder. This do-file was used to conduct the empirical analysis with a country fixed-effects
+dynamic panel data model. Additionally, this file was used to create the descriptive tables and figures in the master thesis.
 
+### Figures
 
+The "Figures" folder contains all of the figures used in the master thesis. They are numerically listed accordingly with their usage in the master thesis. There are in total 15 figures. All of the figures
+are in .png format.
+
+### Paper
+
+The folder "Paper" contains the final work in a .pdf format. This file is named "final_paper.pdf".
+
+### References
+
+All of the papers used in the master thesis are listed in a text file. This file is named "Papers Used in Thesis.txt" and can be found in the "References" folder.
+
+### Tables
+
+The folder "Tables" contains all of the tables used in the master thesis. First, there are the the descriptive tables, starting from "Table 1" to "Table 15". These tables contain descriptive information 
+on both the South Eastern European countries and the countries taken as comparison from different regions of the world. Then, there are the regression tables, starting from "Regression Table 1" to
+"Regression Table 6", which show the results from the empirical analysis. All of the tables are in .docx format.
